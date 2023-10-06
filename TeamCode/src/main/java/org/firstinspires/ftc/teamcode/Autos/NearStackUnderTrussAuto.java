@@ -2,14 +2,17 @@ package org.firstinspires.ftc.teamcode.Autos;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Config
-@Autonomous(name = "7.Auto", group = "drive")
-public class NearStackUnderTrussAuto {
+@Autonomous(group = "Autonomous")
+
+
+public class NearStackUnderTrussAuto extends LinearOpMode {
 
 
     enum State{
@@ -17,91 +20,87 @@ public class NearStackUnderTrussAuto {
 
         INITIAL_MOVE,
 
-        MOVE_ACROSS,
-
-        PIXEL_PLACING,
-
-        CHECKING
+//        MOVE_ACROSS,
+//
+//        PIXEL_PLACING,
+//
+//        CHECKING
 
     }
 
-    public class Red40AUTO extends LinearOpMode {
-        double startPoseX = 1.7613;
+    double startPoseX = 0;
 
-        double startPoseY = 50.7197;
+    double startPoseY = 0;
 
-        double startPoseAngle = 359.0065;
+    double startPoseAngle = 0;
 
-        Pose2d startPose = new Pose2d(startPoseX, startPoseY, Math.toRadians(startPoseAngle));
+    Pose2d startPose = new Pose2d(startPoseX, startPoseY, Math.toRadians(startPoseAngle));
 
-        Pose2d posEstimate;
+    Pose2d posEstimate;
 
-        //Add variables here:
+    //Add variables here:
 //        double initialPoseX = 0;
 //        double initialPoseY = 0;
 //        double initialPoseAngle = 0;
 
-        double spikePoseX = 22.6054;
-        double spikePoseY = -0.5398;
-        double spikePoseAngle = 6.2655;
+    double spikePoseX = 29.4986;
+    double spikePoseY = 0;
+    double spikePoseAngle = 0;
 
-        double stackPoseX = 29.7505;
-        double stackPoseY = 20.4377;
-        double stackPoseAngle = 4.6844;
+    double stackPoseX = 35.0692;
+    double stackPoseY = 21.5953;
+    double stackPoseAngle = 270;
 
-        double trussBeforePoseX = 7.3399;
-        double trussBeforePoseY = -3.4015;
-        double trussBeforePoseAngle = 4.7291;
+    double trussBeforePoseX = 0.9615;
+    double trussBeforePoseY = -2.2097;
+    double trussBeforePoseAngle = 270;
 
-        double trussAfterPoseX = 6.7405;
-        double trussAfterPoseY = -48.3733;
-        double trussAfterPoseAngle = 1.5401;
+    double trussAfterPoseX = 0.9615;
+    double trussAfterPoseY = -43.3513;
+    double trussAfterPoseAngle = 270;
 
-        double backdropPoseX = 30.6434;
-        double backdropPoseY = -86.9907;
-        double backdropPoseAngle = 4.7692;
+    double backdropPoseX = 19.4539;
+    double backdropPoseY = -84.2442;
+    double backdropPoseAngle = 270;
 
-        double parkPoseX = 88.3054;
-        double parkPoseY = 1.6608;
-        double parkPoseAngle = 6.2434;
+    double parkPoseX = -3.7625;
+    double parkPoseY = -78.8080;
+    double parkPoseAngle = 270;
 
-        org.firstinspires.ftc.teamcode.Autos.NearStackUnderTrussAuto.State currentState = org.firstinspires.ftc.teamcode.Autos.NearStackUnderTrussAuto.State.IDLE;
+    NearStackUnderTrussAuto.State currentState = NearStackUnderTrussAuto.State.IDLE;
 
-        @Override
-        public void runOpMode() throws InterruptedException{
-            SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    @Override
+    public void runOpMode() throws InterruptedException{
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-            telemetry.addLine("Init Done");
+        telemetry.addLine("Init Done");
 
-            //Add Trajectories here:
-            TrajectorySequence initialMove = drive.trajectorySequenceBuilder(startPose)
-                    // The robot is at its starting point.
-                    .lineToLinearHeading(new Pose2d(startPoseX, startPoseY, startPoseAngle))
-                    .lineToLinearHeading(new Pose2d(spikePoseX, spikePoseY, spikePoseAngle))
-                    .lineToLinearHeading(new Pose2d(stackPoseX, stackPoseY, stackPoseAngle))
-                    .lineToLinearHeading(new Pose2d(trussBeforePoseX, trussBeforePoseY, trussBeforePoseAngle))
-                    .lineToLinearHeading(new Pose2d(trussAfterPoseX, trussAfterPoseY, trussAfterPoseAngle))
-                    .lineToLinearHeading(new Pose2d(backdropPoseX, backdropPoseY, backdropPoseAngle))
-                    .lineToLinearHeading(new Pose2d(stackPoseX, stackPoseY, stackPoseAngle))
-                    .lineToLinearHeading(new Pose2d(parkPoseX, parkPoseY, parkPoseAngle))
-                    .build();
+        //Add Trajectories here:
+        TrajectorySequence initialMove = drive.trajectorySequenceBuilder(startPose)
+                // The robot is at its starting point.
+                .lineToConstantHeading(new Vector2d(spikePoseX, spikePoseY))
+                .lineToLinearHeading(new Pose2d(stackPoseX, stackPoseY, stackPoseAngle))
+                .lineToLinearHeading(new Pose2d(trussBeforePoseX, trussBeforePoseY, trussBeforePoseAngle))
+                .lineToConstantHeading(new Vector2d(trussAfterPoseX, trussAfterPoseY))
+                .lineToConstantHeading(new Vector2d(backdropPoseX, backdropPoseY))
+                .lineToConstantHeading(new Vector2d(parkPoseX, parkPoseY))
+                .build();
 
-            telemetry.addLine("trajectories built");
+        telemetry.addLine("trajectories built");
 
-            waitForStart();
+        waitForStart();
 
-            while(!isStopRequested() && opModeIsActive()) {
-                posEstimate = drive.getPoseEstimate();
+        while(!isStopRequested() && opModeIsActive()) {
+            posEstimate = drive.getPoseEstimate();
 
-                switch(currentState){
-                    case IDLE:
-                        currentState = org.firstinspires.ftc.teamcode.Autos.NearStackUnderTrussAuto.State.INITIAL_MOVE;
+            switch(currentState){
+                case IDLE:
+                    currentState = State.IDLE;
 
-                    case INITIAL_MOVE:
-                        drive.followTrajectorySequence(initialMove);
-                        currentState = org.firstinspires.ftc.teamcode.Autos.NearStackUnderTrussAuto.State.IDLE;
-                        break;
-                }
+                case INITIAL_MOVE:
+                    drive.followTrajectorySequence(initialMove);
+                    currentState = State.IDLE;
+                    break;
             }
         }
     }
