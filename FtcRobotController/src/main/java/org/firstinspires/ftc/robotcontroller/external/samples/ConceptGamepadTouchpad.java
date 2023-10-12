@@ -27,7 +27,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  *
  *   1) X is the Horizontal axis, and Y is the vertical axis
  *   2) The 0,0 origin is at the center of the touchpad.
- *   3)  1.0, 1.0 is at the top right corner of the touchpad.
+ *   3) 1.0, 1.0 is at the top right corner of the touchpad.
  *   4) -1.0,-1.0 is at the bottom left corner of the touchpad.
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.

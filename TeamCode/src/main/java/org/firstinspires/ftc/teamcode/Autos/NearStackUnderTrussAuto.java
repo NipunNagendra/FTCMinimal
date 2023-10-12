@@ -48,7 +48,7 @@ public class NearStackUnderTrussAuto extends LinearOpMode {
     double spikePoseAngle = 0;
 
     double stackPoseX = 35.0692;
-    double stackPoseY = 21.5953;
+    double stackPoseY = 16.5953;
     double stackPoseAngle = 270;
 
     double trussBeforePoseX = 0.9615;
@@ -59,12 +59,12 @@ public class NearStackUnderTrussAuto extends LinearOpMode {
     double trussAfterPoseY = -43.3513;
     double trussAfterPoseAngle = 270;
 
-    double backdropPoseX = 19.4539;
-    double backdropPoseY = -84.2442;
+    double backdropPoseX = 28.4539;
+    double backdropPoseY = -80.2442;
     double backdropPoseAngle = 270;
 
-    double parkPoseX = -3.7625;
-    double parkPoseY = -78.8080;
+    double parkPoseX = 0.7625;
+    double parkPoseY = -80.8080;
     double parkPoseAngle = 270;
 
     NearStackUnderTrussAuto.State currentState = NearStackUnderTrussAuto.State.IDLE;
@@ -78,12 +78,12 @@ public class NearStackUnderTrussAuto extends LinearOpMode {
         //Add Trajectories here:
         TrajectorySequence initialMove = drive.trajectorySequenceBuilder(startPose)
                 // The robot is at its starting point.
-                .lineToConstantHeading(new Vector2d(spikePoseX, spikePoseY))
+                .lineToLinearHeading(new Pose2d(spikePoseX, spikePoseY, spikePoseAngle))
                 .lineToLinearHeading(new Pose2d(stackPoseX, stackPoseY, stackPoseAngle))
                 .lineToLinearHeading(new Pose2d(trussBeforePoseX, trussBeforePoseY, trussBeforePoseAngle))
-                .lineToConstantHeading(new Vector2d(trussAfterPoseX, trussAfterPoseY))
-                .lineToConstantHeading(new Vector2d(backdropPoseX, backdropPoseY))
-                .lineToConstantHeading(new Vector2d(parkPoseX, parkPoseY))
+                .lineToLinearHeading(new Pose2d(trussAfterPoseX, trussAfterPoseY, trussAfterPoseAngle))
+                .lineToLinearHeading(new Pose2d(backdropPoseX, backdropPoseY, backdropPoseAngle))
+                .lineToLinearHeading(new Pose2d(parkPoseX, parkPoseY, parkPoseAngle))
                 .build();
 
         telemetry.addLine("trajectories built");
