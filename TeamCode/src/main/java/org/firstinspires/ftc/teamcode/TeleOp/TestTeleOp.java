@@ -21,7 +21,7 @@ public class TestTeleOp extends OpMode {
     String moveType = "robot";
 
     double[] motorPower = {0, 0, 0, 0};
-
+    double multiplier;
     public void init() {
         move = new Movement(hardwareMap);
         cs = hardwareMap.get(RevColorSensorV3.class, "cs");
@@ -92,6 +92,28 @@ public class TestTeleOp extends OpMode {
                 moveType = "robot";
             }
         }
+        if (moveType == "robot") {
+            gamepad1.setLedColor(0,0,256,1000);
+        }
+        else if (moveType == "field"){
+            gamepad1.setLedColor(256,0,0,1000);
+
+        }
+
+
+
+
+        if (color == "yellow"){
+            gamepad2.setLedColor(255,191,0,1000);}
+       else if (color == "purple"){
+           gamepad2.setLedColor(179,0,255,1000);
+        }
+       else if (color == "green"){
+           gamepad2.setLedColor(0,256,0,1000);
+        }
+
+
+
 
         if (Math.abs(gamepad1.left_stick_y)  > 0.1 ||
                 Math.abs(gamepad1.left_stick_x)  > 0.1 ||
@@ -117,7 +139,7 @@ public class TestTeleOp extends OpMode {
             }
         }
 
-        move.setPowers(motorPower[0], motorPower[1], motorPower[2], motorPower[3]);
+        move.setPowers(motorPower, multiplier);
     }
 
 }
