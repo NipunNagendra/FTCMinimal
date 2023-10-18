@@ -44,7 +44,6 @@ public class TestTeleOp extends OpMode {
         double leftX;
         double rightX;
 
-
         int red = cs.red();
         int green = cs.green();
         int blue = cs.blue();
@@ -101,9 +100,7 @@ public class TestTeleOp extends OpMode {
         }
 
 
-
-
-        if (color == "yellow"){
+       if (color == "yellow"){
             gamepad2.setLedColor(255,191,0,1000);}
        else if (color == "purple"){
            gamepad2.setLedColor(179,0,255,1000);
@@ -138,7 +135,8 @@ public class TestTeleOp extends OpMode {
                 motorPower = move.fieldDrive(0,0, 0, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
             }
         }
-
+        if (gamepad1.right_bumper){multiplier=0.5;}
+        if (gamepad1.left_bumper){multiplier=0.25;}
         move.setPowers(motorPower, multiplier);
     }
 
