@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+import java.util.HashMap;
+
 
 public class Movement {
 
@@ -11,7 +15,7 @@ public class Movement {
     private DcMotor FR;
     private DcMotor BL;
     private DcMotor BR;
-
+    public HashMap<String, Boolean> buttons = new HashMap<String, Boolean>();
 
     public Movement(HardwareMap hardwareMap) {
         this.robot = hardwareMap;
@@ -26,6 +30,7 @@ public class Movement {
         BL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        //motors are reversed than what they shld be
         FL.setDirection(DcMotor.Direction.FORWARD);
         FR.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.FORWARD);
@@ -41,12 +46,23 @@ public class Movement {
         return motorpowers;
     }
 
-    public void setPowers(double[] motorPower) {
+    public double[] fieldDrive(double leftX, double leftY, double rightX, double imu) {
+        double botHeading = imu;
+        double rotX = leftX * Math.cos(-botHeading) - leftY * Math.sin(-botHeading);
+        double rotY = leftX * Math.sin(-botHeading) + leftY * Math.cos(-botHeading);
 
-        FR.setPower(motorPower[0]);
-        FL.setPower(motorPower[1]);
-        BR.setPower(motorPower[2]);
-        BL.setPower(motorPower[3]);
+        rotX = rotX * 1.1;
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rightX), 1);
+
+        return new double[]{(rotY - rotX - rightX) / denominator, (rotY + rotX + rightX) / denominator, (rotY + rotX - rightX) / denominator, (rotY - rotX + rightX) / denominator};
+    }
+
+    public void setPowers(double[] motorPower, double multiplier) {
+
+        FR.setPower(motorPower[0]*multiplier);
+        FL.setPower(motorPower[1]*multiplier);
+        BR.setPower(motorPower[2]*multiplier);
+        BL.setPower(motorPower[3]*multiplier);
     }
 
     public void setPowers(double fr, double fl, double br, double bl) {
@@ -57,5 +73,20 @@ public class Movement {
         BL.setPower(bl);
     }
 
+    public boolean isPressed(String name, boolean button){
+        boolean output = false;
 
-}
+        //If the hashmap doesn't already contain the key
+        if (!buttons.containsKey(name)) {
+            buttons.put(name, false);
+        }
+
+        boolean buttonWas = buttons.get(name);
+        if (button != buttonWas && button == true){
+            output = true;
+        }
+
+        buttons.put(name, button);
+
+        return output;
+}}
