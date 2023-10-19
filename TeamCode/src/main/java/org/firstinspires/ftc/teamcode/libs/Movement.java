@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.libs;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -89,4 +89,23 @@ public class Movement {
         buttons.put(name, button);
 
         return output;
-}}
+}
+    public boolean isColor(String color, boolean state){
+        boolean output = false;
+
+        //If the hashmap doesn't already contain the key
+        if (!buttons.containsKey(color)) {
+            buttons.put(color, false);
+        }
+
+        boolean buttonWas = buttons.get(color);
+        if (state != buttonWas && state == true){
+            output = true;
+        }
+
+        buttons.put(color, state);
+
+        return output;
+    }
+}
+

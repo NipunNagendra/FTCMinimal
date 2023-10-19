@@ -1,4 +1,4 @@
-package Autos;
+package org.firstinspires.ftc.teamcode.Autos;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;

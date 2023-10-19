@@ -10,11 +10,11 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.libs.Movement;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TestTeleOp", group="TeleOp")
 public class TestTeleOp extends OpMode {
-
     Movement move;
     RevColorSensorV3 cs;
     DistanceSensor ds;
@@ -96,17 +96,16 @@ public class TestTeleOp extends OpMode {
         }
         else if (moveType == "field"){
             gamepad1.setLedColor(256,0,0,1000);
-
         }
 
 
-       if (color == "yellow"){
-            gamepad2.setLedColor(255,191,0,1000);}
-       else if (color == "purple"){
-           gamepad2.setLedColor(179,0,255,1000);
+        if (move.isColor("yellow", (color.equals("yellow")))){
+            gamepad2.setLedColor(255,191,0,100000);}
+        else if (move.isColor("purple", (color.equals("purple")))){
+            gamepad2.setLedColor(179,0,255,100000);
         }
-       else if (color == "green"){
-           gamepad2.setLedColor(0,256,0,1000);
+        else if (move.isColor("green", (color.equals("green")))){
+            gamepad2.setLedColor(0,256,0,100000);
         }
 
 

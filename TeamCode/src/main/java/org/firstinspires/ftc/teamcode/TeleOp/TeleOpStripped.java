@@ -2,10 +2,11 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.libs.Movement;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOpOG", group="TeleOp")
-public class TeleOpOG extends OpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOpStripped", group="TeleOp")
+public class TeleOpStripped extends OpMode {
 
     Movement move;
 
