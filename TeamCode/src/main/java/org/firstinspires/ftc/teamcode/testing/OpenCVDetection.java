@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode.testing;
+
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
@@ -10,8 +12,8 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
-
 @Config
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="OCV DET", group="TeleOp")
 public class OpenCVDetection extends OpenCvPipeline {
 
     public static boolean DETECT_RED = true;
@@ -37,9 +39,9 @@ public class OpenCVDetection extends OpenCvPipeline {
     static final Rect middleArea = new Rect(new Point(120,100), new Point(205,200));
     static final Rect rightArea = new Rect(new Point(220,100), new Point(310,200));
 
-    public OpenCVDetection(Telemetry t) {
-        telemetry = t;
-    }
+//    public OpenCVDetection(Telemetry t) {
+//        telemetry = t;
+//    }
 
     @Override
     public Mat processFrame(Mat input) {
