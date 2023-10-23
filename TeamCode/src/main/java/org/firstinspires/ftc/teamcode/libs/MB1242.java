@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.libs;
+
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
@@ -6,69 +8,58 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.DevicePropertie
 import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 import com.qualcomm.robotcore.util.TypeConversion;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+
 @I2cDeviceType
-@DeviceProperties(name = "MB1242 Ultrasonic Sensor", xmlTag = "MB1242")
- public class MB1242 extends I2cDeviceSynchDevice<I2cDeviceSynch>{
-    protected void writeShort(final Register reg, short value) {
-        deviceClient.write(reg.bVal, TypeConversion.shortToByteArray(value));
-    }
+@DeviceProperties(
+        name = "MB1242",
+        description = "ultrasonic distance sensor",
+        xmlTag = "MB1242"
+)
+public class MB1242 extends I2cDeviceSynchDevice<I2cDeviceSynch> implements DistanceSensor {
 
-    protected short readShort(Register reg) {
-        return TypeConversion.byteArrayToShort(deviceClient.read(reg.bVal, 2));
-    }
-    public enum Register{
-        INITIATE_WRITE(0xE0),
-        WRITE_RANGE(0x51),
-        INITIATE_READ(0xE1);
 
-        public int bVal;
-
-        Register(int bVal){
-            this.bVal=bVal;
-        }
-    }
     @Override
-    public Manufacturer getManufacturer(){
+    public Manufacturer getManufacturer() {
         return Manufacturer.Unknown;
     }
 
     @Override
-    protected synchronized boolean doInitialize(){
+    protected synchronized boolean doInitialize() {
         return true;
     }
+
     @Override
-    public String getDeviceName(){
-        return "Maxbotix MB1242 Ultrasonic Sensor";
+    public String getDeviceName() {
+        return "MB1242 I2C Ultrasonic Distance Sensor";
     }
 
+    public MB1242(I2cDeviceSynch deviceClient) {
+        super(deviceClient, true);
 
-
-    public MB1242(I2cDeviceSynch deviceClient, boolean deviceClientIsOwned)
-    {
-        super(deviceClient, deviceClientIsOwned);
-
-        this.setOptimalReadWindow();
-        this.deviceClient.setI2cAddress(I2cAddr.create7bit(0xE0));
+        this.deviceClient.setI2cAddress(I2cAddr.create7bit(0x70));
 
         super.registerArmingStateCallback(false);
         this.deviceClient.engage();
     }
 
-    protected void setOptimalReadWindow() {
-
-        I2cDeviceSynch.ReadWindow readWindow = new I2cDeviceSynch.ReadWindow(
-                Register.FIRST.bVal,
-                Register.LAST.bVal - Register.FIRST.bVal + 1,
-                I2cDeviceSynch.ReadMode.REPEAT);
-        this.deviceClient.setReadWindow(readWindow);
+    public void ping() {
+        deviceClient.write(TypeConversion.intToByteArray(0x51));
     }
 
-    public short readRange(){
-        return readShort(Register.INITIATE_READ);
+
+    private short readRawRange(){
+        return TypeConversion.byteArrayToShort(deviceClient.read( 2));
     }
 
-    public short takeRange(){
-        
+    /**
+     * Allow 100ms between pinging. Returns in centimeters
+     */
+    @Override
+    public double getDistance(DistanceUnit unit){
+        return unit.fromCm(readRawRange());
     }
+
 
 }
