@@ -15,6 +15,8 @@ public class GuardMode extends OpMode {
     double headingParameter;
     double lockThreshold;
     Pose2d lockLocation;
+    Pose2d currentLocation;
+    
     public void init() {
         drive = new SampleMecanumDrive(hardwareMap);
         xyParameter= 1;
@@ -43,4 +45,13 @@ public class GuardMode extends OpMode {
         double heading = Angle.normDelta(targetPos.getHeading()) - Angle.normDelta(currPos.getHeading());
 
         drive.setWeightedDrivePower(new Pose2d(xy.times(xyParameter), heading* headingParameter));
-    }}
+    }
+    
+    public void lockTo(Pose2d targetPos, Pose2d currPos) {
+        Pose2d difference = targetPos.minus(currPos);
+        Vector2d xy = difference.vec().rotated(-currPos.getHeading());
+        double heading = Angle.normDelta(targetPos.getHeading()) - Angle.normDelta(currPos.getHeading());
+
+        drive.setWeightedDrivePower(new Pose2d(xy.times(xyParameter), heading* headingParameter));
+    }
+}
