@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.testing;
 
-import org.firstinspires.ftc.teamcode.testing.RedPipeline;
-
+import org.firstinspires.ftc.teamcode.testing.BluePipeline;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -17,8 +16,8 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.jar.Attributes;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="cvRunner-Nipun", group="TeleOp")
-public class CVrunner extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="CVRunnerBlue-Nipun", group="TeleOp")
+public class CVRunnerBlue extends LinearOpMode {
 
     private RedPipeline.Location location;
 
@@ -27,7 +26,7 @@ public class CVrunner extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "identifyier","teamcode");
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
-        RedPipeline detector = new RedPipeline(telemetry);
+        BluePipeline detector = new BluePipeline(telemetry);
         camera.setPipeline(detector);
         camera.setMillisecondsPermissionTimeout(5000);
 

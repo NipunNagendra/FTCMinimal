@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.TeleOp.Manipulators;
 
 import java.util.HashMap;
 
@@ -16,6 +17,7 @@ public class Movement {
     private DcMotor BL;
     private DcMotor BR;
     public HashMap<String, Boolean> buttons = new HashMap<String, Boolean>();
+
 
     public Movement(HardwareMap hardwareMap) {
         this.robot = hardwareMap;

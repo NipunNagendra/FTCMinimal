@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.testing;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -8,8 +10,9 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
+@Config
 
-public class JSSM_CV1 extends OpenCvPipeline {
+public class RedPipeline extends OpenCvPipeline {
     Telemetry telemetry;
     Mat mat = new Mat();
     public enum Location {
@@ -29,16 +32,26 @@ public class JSSM_CV1 extends OpenCvPipeline {
     static final Rect FRONT_ROI = new Rect(
             new Point(220, 35),
             new Point(280, 75));
-     static double PERCENT_COLOR_THRESHOLD = 0.4;
-    public JSSM_CV1(Telemetry t) { telemetry = t; }
+     public static double PERCENT_COLOR_THRESHOLD = 0.4;
+    public RedPipeline(Telemetry t) { telemetry = t; }
+
+    public static double lh;
+    public static double ls;
+    public static double lv;
+    public static double hh;
+    public static double hs;
+    public static double hv;
 
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-        Scalar lowerHSV = new Scalar(23, 50, 70);
-        Scalar highHSV = new Scalar(32, 255, 255);
+        //Red
+        Scalar lowerRedHSV = new Scalar(0, 100, 100);
+        Scalar highRedHSV = new Scalar(10, 255, 255);
 
-        Core.inRange(mat, lowerHSV, highHSV, mat);
+
+        Core.inRange(mat, lowerRedHSV, highRedHSV, mat);
+
 
         Mat left = mat.submat(LEFT_ROI);
         Mat right = mat.submat(RIGHT_ROI);
@@ -63,16 +76,15 @@ public class JSSM_CV1 extends OpenCvPipeline {
         boolean pixelRight = rightValue > PERCENT_COLOR_THRESHOLD;
         boolean pixelFront = frontValue > PERCENT_COLOR_THRESHOLD;
 
-        if (pixelLeft && pixelRight) {
+        if (pixelLeft && pixelRight || pixelLeft && pixelFront || pixelRight && pixelFront) {
             location = Location.NOT_FOUND;
             telemetry.addData("Pixel Location", "not found");
         }
-
-        if (pixelLeft) {
+        else if (pixelRight) {
             location = Location.RIGHT;
             telemetry.addData("Pixel Location", "right");
         }
-        if (pixelFront) {
+        else if (pixelFront) {
             location = Location.FRONT;
             telemetry.addData("Pixel Location", "front");
         }
@@ -84,12 +96,13 @@ public class JSSM_CV1 extends OpenCvPipeline {
 
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
-        Scalar colorStone = new Scalar(255, 0, 0);
-        Scalar colorSkystone = new Scalar(0, 255, 0);
+        Scalar undetected = new Scalar(255, 0, 0);
+        Scalar detected = new Scalar(0, 255, 0);
 
-        Imgproc.rectangle(mat, LEFT_ROI, location == Location.LEFT? colorSkystone:colorStone);
-        Imgproc.rectangle(mat, RIGHT_ROI, location == Location.RIGHT? colorSkystone:colorStone);
-        Imgproc.rectangle(mat, FRONT_ROI, location == Location.FRONT? colorSkystone:colorStone);
+
+        Imgproc.rectangle(mat, LEFT_ROI, location == Location.LEFT? detected:undetected);
+        Imgproc.rectangle(mat, RIGHT_ROI, location == Location.RIGHT? detected:undetected);
+        Imgproc.rectangle(mat, FRONT_ROI, location == Location.FRONT? detected:undetected);
 
         return mat;
     }

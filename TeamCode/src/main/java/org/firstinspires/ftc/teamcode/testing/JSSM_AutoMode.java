@@ -17,7 +17,7 @@ public class JSSM_AutoMode extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
-        JSSM_CV1 detector = new JSSM_CV1(telemetry);
+        BluePipeline detector = new BluePipeline(telemetry);
         webCam.setPipeline(detector);
 
         /*@Override

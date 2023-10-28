@@ -7,25 +7,31 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.libs.Movement;
-
+import org.firstinspires.ftc.teamcode.TeleOp.Manipulators;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="MainTeleOp", group="TeleOp")
 public class MainTeleOp extends OpMode {
     Movement move;
+    Manipulators manip;
     RevColorSensorV3 cs;
     DistanceSensor ds;
     String moveType = "robot";
+    boolean outtakeServoStatus = false;
 
     double[] motorPower = {0, 0, 0, 0};
     double multiplier;
     public void init() {
         move = new Movement(hardwareMap);
+        manip = new Manipulators(hardwareMap);
         cs = hardwareMap.get(RevColorSensorV3.class, "cs");
         ds = hardwareMap.get(DistanceSensor.class, "ds");
+        manip.gateToggle(true);
+        telemetry.addData("servopos", manip.outtakeServo.getPosition());
         telemetry.addData("init", "completed");
         telemetry.update();
     }
@@ -34,11 +40,12 @@ public class MainTeleOp extends OpMode {
     public void loop()
     {
         //imu for field oriented drive
+        /*
         IMU imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT
-        ));
+        ));*/
 
         double leftY;
         double leftX;
@@ -73,6 +80,7 @@ public class MainTeleOp extends OpMode {
         telemetry.addLine(color);
         telemetry.addData("Distance(Cm)", ds.getDistance(DistanceUnit.CM));
         telemetry.addLine(moveType);
+        telemetry.addData("offic posit", outtakeServoStatus);
         telemetry.update();
 
         if(ds.getDistance(DistanceUnit.CM)>=35 && ds.getDistance(DistanceUnit.CM)<=45){
@@ -80,7 +88,8 @@ public class MainTeleOp extends OpMode {
         }
 
         if (gamepad1.options) {
-            imu.resetYaw();
+            //
+            // imu.resetYaw();
         }
 
         if (move.isPressed("share", gamepad1.share)) {
@@ -123,7 +132,7 @@ public class MainTeleOp extends OpMode {
                 motorPower = move.holonomicDrive(leftX, leftY, rightX);
             }
             else if(moveType=="field"){
-                motorPower = move.fieldDrive(leftX,leftY, rightX, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+                //motorPower = move.fieldDrive(leftX,leftY, rightX, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
             }
         }
         else {
@@ -131,12 +140,21 @@ public class MainTeleOp extends OpMode {
                 motorPower = move.holonomicDrive(0, 0, 0);
             }
             else if(moveType=="field"){
-                motorPower = move.fieldDrive(0,0, 0, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+                //motorPower = move.fieldDrive(0,0, 0, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
             }
         }
         if (gamepad1.right_bumper){multiplier=0.5;}
         if (gamepad1.left_bumper){multiplier=0.25;}
         move.setPowers(motorPower, multiplier);
+
+        if (move.isPressed("rightBumper2", gamepad2.right_bumper)) {
+            manip.gateToggle(outtakeServoStatus);
+            if (outtakeServoStatus == false){
+                outtakeServoStatus = true;
+            } else if(outtakeServoStatus){
+                outtakeServoStatus = false;
+            }
+        }
     }
 
 }
